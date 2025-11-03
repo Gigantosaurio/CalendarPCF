@@ -1,0 +1,134 @@
+.summary-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: clamp(0.5rem, 2vw, 1.5rem);
+  font-family: "Inter", sans-serif;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.summary-title {
+  font-size: clamp(1.3rem, 1.8vw, 1.8rem);
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.2rem;
+  width: 100%;
+  max-width: 1000px;
+}
+
+.summary-card {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 1rem;
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.summary-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+}
+
+.card-title {
+  font-size: clamp(0.9rem, 1vw, 1.1rem);
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 0.5rem;
+}
+
+.chart-container {
+  width: 100%;
+  height: 180px; /* tamaño base */
+}
+
+.chart-taller {
+  height: 220px; /* 👈 más alto para mostrar completo el gráfico */
+}
+
+/* Tarjeta de totales */
+.summary-card-wide {
+  grid-column: span 2;
+  padding: 1rem 1.5rem;
+}
+
+.summary-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.6rem 1.2rem;
+  margin-top: 0.8rem;
+}
+
+.summary-stat {
+  background: #f8f9fb;
+  border-radius: 8px;
+  padding: 0.6rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: background-color 0.2s ease;
+}
+
+.summary-stat:hover {
+  background: #eef3f8;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: #555;
+}
+
+.stat-value {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1976d2;
+  margin-top: 0.2rem;
+}
+
+.summary-footer {
+  margin-top: 1.5rem;
+}
+
+.back-btn {
+  background-color: #2196f3;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.back-btn:hover {
+  background-color: #1976d2;
+  transform: scale(1.05);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .summary-card-wide {
+    grid-column: span 1;
+  }
+
+  .chart-container {
+    height: 160px;
+  }
+
+  .chart-taller {
+    height: 190px;
+  }
+
+  .summary-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

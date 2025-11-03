@@ -1,0 +1,182 @@
+/* === CONTENEDOR GENERAL === */
+.monthly-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  font-family: "Inter", sans-serif;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+/* === CABECERA === */
+.monthly-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  flex-shrink: 0;
+}
+
+.back-btn {
+  background: #eee;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.back-btn:hover {
+  background: #ddd;
+}
+.monthly-title {
+  font-size: clamp(1rem, 1.5vw, 1.5rem);
+  font-weight: 600;
+}
+
+/* === BODY: DOS COLUMNAS === */
+.monthly-body {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* === PANEL DE AUSENCIAS === */
+.absence-panel {
+  flex: 0 0 45%;
+  display: flex;
+  flex-direction: column;
+  min-height: 0; /* Permite que el grid interno use todo el alto */
+  overflow: hidden;
+}
+
+/* === PANEL DEL CALENDARIO === */
+.calendar-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden; /* Evita que se desborde verticalmente */
+}
+
+/* === ABSENCE SELECTOR === */
+.absence-selector {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  height: 100%;
+  width: 100%;
+  gap: 8px;
+}
+
+/* Título */
+.absence-selector-title {
+  font-size: clamp(0.9rem, 1vw + 0.5rem, 1.1rem);
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* === GRID DE BOTONES === */
+.absence-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  grid-auto-rows: 1fr;
+  gap: 8px;
+  height: 100%;
+  align-items: stretch;
+  justify-items: stretch;
+  overflow: hidden;
+}
+
+/* === BOTONES === */
+.absence-btn {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  border-radius: 10px;
+  font-size: clamp(0.75rem, 1vw, 1rem);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  height: 100%;
+  padding: 6px;
+  background: #f2f2f2;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  overflow: hidden;
+}
+
+.absence-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* Texto dentro de los botones */
+.absence-code {
+  font-weight: 600;
+  font-size: clamp(0.9rem, 1vw, 1.1rem);
+}
+
+.absence-label {
+  font-size: clamp(0.7rem, 0.8vw, 0.9rem);
+  opacity: 0.85;
+  text-align: center;
+  line-height: 1.1em;
+  word-break: break-word;
+  white-space: normal;
+  overflow-wrap: break-word;
+  max-height: 2.4em; /* evita que el texto empuje el botón */
+  overflow: hidden;
+}
+
+/* === FOOTER === */
+.absence-footer {
+  display: flex;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.delete-btn {
+  background-color: #f55;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: clamp(0.4rem, 0.6vw, 0.6rem) clamp(0.6rem, 1vw, 1rem);
+  font-size: clamp(0.75rem, 0.85vw, 1rem);
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s;
+}
+.delete-btn:hover {
+  background-color: #e33;
+  transform: scale(1.03);
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 800px) {
+  .monthly-body {
+    flex-direction: column;
+  }
+
+  .absence-panel {
+    flex: 1 1 100%;
+  }
+
+  .calendar-panel {
+    flex: 1 1 100%;
+  }
+
+  .absence-grid {
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  }
+
+  .absence-label {
+    display: none;
+  }
+}

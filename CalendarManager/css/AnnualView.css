@@ -1,0 +1,211 @@
+:root {
+  /* Paleta Light (predeterminada) */
+  --color-bg: #fafafa;
+  --color-primary: #ffffff;
+  --color-secondary: #0070ba;
+  --color-text-primary: #080808;
+  --color-text-secondary: #585858;
+  --color-border-subtle: #eeeeee;
+  --color-shadow: rgba(0, 0, 0, 0.05);
+
+  /* Colores de botones específicos */
+  --color-admin-bg: #2e7d32;
+  --color-admin-hover: #1b5e20;
+}
+
+.annual-view-wrapper.dark-mode {
+  /* Paleta Dark */
+  --color-bg: #0a0a0a;
+  --color-primary: #1a1a1a;
+  --color-secondary: #0070ba; /* Mismo azul */
+  --color-text-primary: #fafafa;
+  --color-text-secondary: #a3a3a3;
+  --color-border-subtle: #2c2c2c;
+  --color-shadow: rgba(0, 0, 0, 0.2);
+}
+
+/* Contenedor principal que usa las variables */
+.annual-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px;
+  background: var(--color-bg);
+  color: var(--color-text-primary);
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  /* Usamos la fuente más común en Power Apps para coherencia */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.annual-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.year-title {
+  font-size: 1.7rem; /* Ajustado para elegancia */
+  color: var(--color-text-primary);
+  font-weight: 600;
+  margin: 0;
+  min-width: 200px;
+  text-align: center;
+}
+
+.year-nav {
+  background: var(--color-primary);
+  border: 1px solid var(--color-border-subtle);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 50%; /* Botones redondos */
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px var(--color-shadow);
+}
+
+.year-nav:hover {
+  color: var(--color-secondary);
+  border-color: var(--color-secondary);
+  transform: scale(1.05);
+}
+
+.year-nav svg {
+  width: 1em;
+}
+
+.months-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 columnas (dará 3 filas) */
+  gap: 16px;
+  width: 100%;
+  max-width: 900px; /* Un poco más de espacio */
+}
+
+.month-card {
+  background: var(--color-primary);
+  border-radius: 12px;
+  padding: 20px 10px;
+  text-align: center;
+  cursor: pointer;
+  /* Sombra sutil como en tu app principal */
+  box-shadow: 0 1px 2px var(--color-shadow), 0 2px 4px var(--color-shadow);
+  transition: all 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--color-border-subtle);
+}
+
+.month-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 8px var(--color-shadow), 0 8px 16px var(--color-shadow);
+  border-color: var(--color-secondary);
+}
+
+.month-icon {
+  font-size: 2.2rem;
+  color: var(--color-secondary); /* Azul de tu tema */
+}
+
+.month-name {
+  font-weight: 600; /* Un poco más de peso */
+  color: var(--color-text-primary);
+  font-size: 1.1rem;
+}
+
+.annual-footer {
+  margin-top: 32px;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  width: 100%;
+  max-width: 900px;
+}
+
+.footer-btn {
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  flex-grow: 1; /* Ocupan espacio */
+  max-width: 300px; /* Pero no son gigantes */
+}
+
+.footer-btn svg {
+   margin-bottom: 2px; /* Pequeño ajuste visual */
+}
+
+.summary-btn {
+  background: var(--color-secondary);
+  color: white;
+}
+
+.summary-btn:hover {
+  opacity: 0.85;
+}
+
+.admin-btn {
+  background: var(--color-admin-bg);
+  color: white;
+}
+
+.admin-btn:hover {
+  background: var(--color-admin-hover);
+}
+
+/* Media Queries para móviles */
+@media (max-width: 768px) {
+  .annual-container {
+    padding: 16px;
+  }
+  
+  .year-title {
+    font-size: 1.4rem;
+    min-width: 150px;
+  }
+  
+  .months-grid {
+     grid-template-columns: repeat(3, 1fr); /* 3 columnas en móvil */
+     gap: 8px;
+  }
+  
+  .month-card {
+    padding: 14px;
+    gap: 4px;
+  }
+
+  .month-icon {
+    font-size: 1.8rem;
+  }
+  
+  .month-name {
+    font-size: 0.9rem;
+  }
+
+  .annual-footer {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .footer-btn {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
