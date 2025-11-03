@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Jorge\\Desktop\\PCF Calendar\\PCF Calendar.pcfproj": {}
+    "C:\\Users\\Jorge\\Desktop\\PCF Calendar\\PCF-Calendar\\PCF Calendar.pcfproj": {}
   },
   "projects": {
-    "C:\\Users\\Jorge\\Desktop\\PCF Calendar\\PCF Calendar.pcfproj": {
+    "C:\\Users\\Jorge\\Desktop\\PCF Calendar\\PCF-Calendar\\PCF Calendar.pcfproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Jorge\\Desktop\\PCF Calendar\\PCF Calendar.pcfproj",
+        "projectUniqueName": "C:\\Users\\Jorge\\Desktop\\PCF Calendar\\PCF-Calendar\\PCF Calendar.pcfproj",
         "projectName": "PCF Calendar",
-        "projectPath": "C:\\Users\\Jorge\\Desktop\\PCF Calendar\\PCF Calendar.pcfproj",
+        "projectPath": "C:\\Users\\Jorge\\Desktop\\PCF Calendar\\PCF-Calendar\\PCF Calendar.pcfproj",
         "packagesPath": "C:\\Users\\Jorge\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Jorge\\Desktop\\PCF Calendar\\obj\\",
+        "outputPath": "C:\\Users\\Jorge\\Desktop\\PCF Calendar\\PCF-Calendar\\obj\\",
         "projectStyle": "PackageReference",
         "UsingMicrosoftNETSdk": false,
         "configFilePaths": [

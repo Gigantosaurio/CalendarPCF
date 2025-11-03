@@ -1,12 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "Dqs26kAb0Pg=",
+  "dgSpecHash": "IG6tk9hB6l0=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Jorge\\Desktop\\PCF Calendar\\PCF Calendar.pcfproj",
+  "projectFilePath": "C:\\Users\\Jorge\\Desktop\\PCF Calendar\\PCF-Calendar\\PCF Calendar.pcfproj",
   "expectedPackageFiles": [
     "C:\\Users\\Jorge\\.nuget\\packages\\microsoft.netframework.referenceassemblies\\1.0.0\\microsoft.netframework.referenceassemblies.1.0.0.nupkg.sha512",
     "C:\\Users\\Jorge\\.nuget\\packages\\microsoft.netframework.referenceassemblies.net462\\1.0.0\\microsoft.netframework.referenceassemblies.net462.1.0.0.nupkg.sha512",
-    "C:\\Users\\Jorge\\.nuget\\packages\\microsoft.powerapps.msbuild.pcf\\1.49.3\\microsoft.powerapps.msbuild.pcf.1.49.3.nupkg.sha512"
+    "C:\\Users\\Jorge\\.nuget\\packages\\microsoft.powerapps.msbuild.pcf\\1.50.1\\microsoft.powerapps.msbuild.pcf.1.50.1.nupkg.sha512"
   ],
   "logs": []
 }

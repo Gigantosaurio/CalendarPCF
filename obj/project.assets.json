@@ -14,7 +14,7 @@
           "build/Microsoft.NETFramework.ReferenceAssemblies.net462.targets": {}
         }
       },
-      "Microsoft.PowerApps.MSBuild.Pcf/1.49.3": {
+      "Microsoft.PowerApps.MSBuild.Pcf/1.50.1": {
         "type": "package",
         "build": {
           "build/Microsoft.PowerApps.MSBuild.Pcf.props": {},
@@ -362,10 +362,10 @@
         "microsoft.netframework.referenceassemblies.net462.nuspec"
       ]
     },
-    "Microsoft.PowerApps.MSBuild.Pcf/1.49.3": {
-      "sha512": "/3yvr6Xi3mWdXnMwIZ8ooMsDiCOtN56UzvMu9O/oqSisY/xCpyMQsPotmjkD0AH3SH8yZNFYGNa/8Mg1w3XnvQ==",
+    "Microsoft.PowerApps.MSBuild.Pcf/1.50.1": {
+      "sha512": "gjVP4VjvLHPzN2NaTCeSASAsOfKne+F9scTNADH+xaUSAkanqLG3eYhf68qSsWPWP5ZFtyU4vSj0AqWB/kiimw==",
       "type": "package",
-      "path": "microsoft.powerapps.msbuild.pcf/1.49.3",
+      "path": "microsoft.powerapps.msbuild.pcf/1.50.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -373,7 +373,7 @@
         "LICENSE.txt",
         "build/Microsoft.PowerApps.MSBuild.Pcf.props",
         "build/Microsoft.PowerApps.MSBuild.Pcf.targets",
-        "microsoft.powerapps.msbuild.pcf.1.49.3.nupkg.sha512",
+        "microsoft.powerapps.msbuild.pcf.1.50.1.nupkg.sha512",
         "microsoft.powerapps.msbuild.pcf.nuspec",
         "tasks/Microsoft.PowerApps.MSBuild.Pcf.tasks",
         "tasks/net472/Microsoft.PowerPlatform.MSBuild.Telemetry.Tasks.dll",
@@ -467,11 +467,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Jorge\\Desktop\\PCF Calendar\\PCF Calendar.pcfproj",
+      "projectUniqueName": "C:\\Users\\Jorge\\Desktop\\PCF Calendar\\PCF-Calendar\\PCF Calendar.pcfproj",
       "projectName": "PCF Calendar",
-      "projectPath": "C:\\Users\\Jorge\\Desktop\\PCF Calendar\\PCF Calendar.pcfproj",
+      "projectPath": "C:\\Users\\Jorge\\Desktop\\PCF Calendar\\PCF-Calendar\\PCF Calendar.pcfproj",
       "packagesPath": "C:\\Users\\Jorge\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Jorge\\Desktop\\PCF Calendar\\obj\\",
+      "outputPath": "C:\\Users\\Jorge\\Desktop\\PCF Calendar\\PCF-Calendar\\obj\\",
       "projectStyle": "PackageReference",
       "UsingMicrosoftNETSdk": false,
       "configFilePaths": [

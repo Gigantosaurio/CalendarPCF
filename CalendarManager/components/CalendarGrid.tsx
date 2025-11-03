@@ -9,7 +9,7 @@ interface CalendarGridProps {
   selectedDays: number[];
   onDayClick: (day: number) => void;
   onSelectRange?: (days: number[]) => void;
-  darkMode?: boolean; // 👈 añadimos esta prop
+  darkMode?: boolean;
 }
 
 export const AbsenceTextToType: Record<string, AbsenceType> = Object.fromEntries(
@@ -23,7 +23,7 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
   selectedDays,
   onDayClick,
   onSelectRange,
-  darkMode = false // por defecto, modo claro
+  darkMode = false
 }) => {
   const [dragging, setDragging] = React.useState(false);
   const [rangeStart, setRangeStart] = React.useState<number | null>(null);
@@ -45,8 +45,14 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
     return weekday === 0 || weekday === 6;
   };
 
+  // 🔒 Determinar si el mes/año está en el pasado
+  const today = new Date();
+  const currentYear = today.getFullYear();
+  const currentMonth = today.getMonth(); // 0 = enero
+  const isPastMonth = year < currentYear || (year === currentYear && month < currentMonth);
+
   const handleMouseDown = (day: number) => {
-    if (isWeekend(day)) return;
+    if (isPastMonth || isWeekend(day)) return;
     setDragging(true);
     setRangeStart(day);
   };
@@ -57,7 +63,7 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
   };
 
   const handleMouseEnter = (day: number) => {
-    if (!dragging || rangeStart === null || !onSelectRange) return;
+    if (isPastMonth || !dragging || rangeStart === null || !onSelectRange) return;
     const start = Math.min(rangeStart, day);
     const end = Math.max(rangeStart, day);
     const range: number[] = [];
@@ -69,7 +75,9 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
 
   return (
     <div
-      className={`calendar-grid ${darkMode ? "dark-mode" : ""}`}
+      className={`calendar-grid ${darkMode ? "dark-mode" : ""} ${
+        isPastMonth ? "disabled-month" : ""
+      }`}
       onMouseLeave={handleMouseUp}
     >
       {daysOfWeek.map((d) => (
@@ -92,6 +100,7 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
           "calendar-day",
           weekend && "weekend",
           isSelected && "selected",
+          isPastMonth && "disabled-day"
         ]
           .filter(Boolean)
           .join(" ");
@@ -100,20 +109,23 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
           <div
             key={i}
             className={classes}
-            style={{ backgroundColor: weekend ? "var(--weekend-bg)" : absenceColor }}
-            onClick={() => {
-              if (!weekend) {
-                if (isSelected) {
-                  onSelectRange?.(selectedDays.filter((d) => d !== day));
-                } else {
-                  onSelectRange?.([...selectedDays, day]);
-                }
-                onDayClick(day);
-              }
+            style={{
+              backgroundColor: weekend ? "var(--weekend-bg)" : absenceColor,
+              cursor: isPastMonth ? "not-allowed" : "pointer",
+              opacity: isPastMonth ? 0.6 : 1
             }}
-            onMouseDown={() => !weekend && handleMouseDown(day)}
+            onClick={() => {
+              if (isPastMonth || weekend) return;
+              if (isSelected) {
+                onSelectRange?.(selectedDays.filter((d) => d !== day));
+              } else {
+                onSelectRange?.([...selectedDays, day]);
+              }
+              onDayClick(day);
+            }}
+            onMouseDown={() => !isPastMonth && !weekend && handleMouseDown(day)}
             onMouseUp={handleMouseUp}
-            onMouseEnter={() => !weekend && handleMouseEnter(day)}
+            onMouseEnter={() => !isPastMonth && !weekend && handleMouseEnter(day)}
           >
             <div className="day-number">{day}</div>
             {absenceType && <div className="absence-text">{absenceType}</div>}

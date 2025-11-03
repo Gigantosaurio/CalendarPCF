@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <manifest>
-  <control namespace="Calendar" constructor="CalendarManager" version="1.0.1" display-name-key="CalendarManager" description-key="CalendarManager description" control-type="virtual" api-version="1.3.18">
+  <control namespace="Calendar" constructor="CalendarManager" version="2.0.1" display-name-key="CalendarManager" description-key="CalendarManager description" control-type="virtual" api-version="1.3.18">
     <external-service-usage enabled="false"/>
     <property name="datasource" display-name-key="Datasource" of-type="SingleLine.Text" usage="input" required="false"/>
     <property name="userid" display-name-key="Userid" of-type="SingleLine.Text" usage="input" required="false"/>
