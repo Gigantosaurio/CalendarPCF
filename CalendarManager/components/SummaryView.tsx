@@ -28,37 +28,43 @@ interface SummaryViewProps {
   onBack: () => void;
   userid: string;
   datasource: AbsenceRecord[];
+  darkMode?: boolean; // 👈 añadimos el modo oscuro
 }
 
-export const SummaryView: React.FC<SummaryViewProps> = ({ onBack, userid, datasource }) => {
+export const SummaryView: React.FC<SummaryViewProps> = ({
+  onBack,
+  userid,
+  datasource,
+  darkMode = false,
+}) => {
   const COLORS = ["#42a5f5", "#66bb6a", "#ffb74d", "#e57373", "#9575cd", "#4caf50", "#ff8a65"];
 
-  // ---- Agrupar por tipo, ignorando "Sin asignar" ----
+  // ---- Filtrar por usuario ----
+  datasource = datasource.filter((rec) => rec.userid === userid);
+
+  // ---- Agrupar por tipo ----
   const typeMap: Record<string, number> = {};
-  datasource = datasource.filter(rec => rec.userid === userid);
-  datasource.forEach(rec => {
-    if (rec.type) { // Ignorar vacíos
+  datasource.forEach((rec) => {
+    if (rec.type) {
       typeMap[rec.type] = (typeMap[rec.type] || 0) + 1;
     }
   });
-
   const absenceData = Object.entries(typeMap).map(([name, value]) => ({ name, value }));
 
   // ---- Agrupar por mes ----
   const monthNames = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
   const monthMap: Record<number, number> = {};
   for (let i = 0; i < 12; i++) monthMap[i] = 0;
-  datasource.forEach(rec => {
+  datasource.forEach((rec) => {
     if (rec.type) monthMap[rec.month] = (monthMap[rec.month] || 0) + 1;
   });
-
   const monthData = monthNames.map((mes, i) => ({ mes, total: monthMap[i] }));
 
   // ---- Totales ----
-  const totalAbsences = datasource.filter(rec => rec.type).length;
+  const totalAbsences = datasource.filter((rec) => rec.type).length;
 
   return (
-    <div className="summary-container">
+    <div className={`summary-container ${darkMode ? "dark-mode" : ""}`}>
       <h2 className="summary-title">Resumen de Ausencias</h2>
 
       <div className="summary-grid">
@@ -74,14 +80,14 @@ export const SummaryView: React.FC<SummaryViewProps> = ({ onBack, userid, dataso
                   cy="50%"
                   outerRadius={80}
                   dataKey="value"
-                  label={false} // Oculta etiquetas dentro del círculo
+                  label={false}
                 >
                   {absenceData.map((_, i) => (
                     <Cell key={i} fill={COLORS[i % COLORS.length]} />
                   ))}
                 </Pie>
                 <Tooltip />
-                <Legend verticalAlign="bottom" height={36}/> {/* Muestra leyenda debajo */}
+                <Legend verticalAlign="bottom" height={36} />
               </PieChart>
             </ResponsiveContainer>
           </div>

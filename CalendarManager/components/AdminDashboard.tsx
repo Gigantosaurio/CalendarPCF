@@ -29,9 +29,10 @@ interface SummaryAdminViewProps {
   datasource: AbsenceRecordAdmin[];
   onBack: () => void;
   onAdminMonthlyView: (userid: string) => void;
+  isDarkMode?: boolean;
 }
 
-export const AdminDashboard: React.FC<SummaryAdminViewProps> = ({ datasource, onBack, onAdminMonthlyView }) => {
+export const AdminDashboard: React.FC<SummaryAdminViewProps> = ({ datasource, onBack, onAdminMonthlyView, isDarkMode = false }) => {
   const [yearFilter, setYearFilter] = React.useState<number | "all">("all");
   const [userFilter, setUserFilter] = React.useState<string>("all");
   const [currentPage, setCurrentPage] = React.useState(1);
@@ -77,7 +78,7 @@ export const AdminDashboard: React.FC<SummaryAdminViewProps> = ({ datasource, on
   }));
 
   return (
-    <div className="summary-admin-container">
+    <div className={`summary-admin-container ${isDarkMode ? "dark-mode" : ""}`}>
       <h2 className="summary-title">Dashboard Admin</h2>
 
       {/* Gráficos */}

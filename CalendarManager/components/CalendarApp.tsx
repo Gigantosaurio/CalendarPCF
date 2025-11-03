@@ -36,7 +36,7 @@ export const CalendarApp: React.FC<CalendarAppProps> = ({
   };
  
   return (
-    <div className="calendar-app-container">
+    <div className={`calendar-app-container ${darkMode ? "dark-mode" : ""}`}>
       {currentView === "annual" && (
         <AnnualView
           year={selectedYear}
@@ -54,7 +54,7 @@ export const CalendarApp: React.FC<CalendarAppProps> = ({
           year={selectedYear}
           datasource={datasource}
           userid={(selectedUserId ? selectedUserId : userid)}
-          //isDarkMode={darkMode}
+          isDarkMode={darkMode}
           onBack={() => setCurrentView("annual")}
           onSave={onSave}
           onDelete={onDelete}

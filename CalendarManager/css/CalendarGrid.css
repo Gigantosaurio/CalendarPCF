@@ -1,3 +1,23 @@
+:root {
+  --day-bg: #ffffff;
+  --day-text: #222;
+  --weekend-bg: #f5f5f5;
+  --header-text: #444;
+  --border-color: #ddd;
+  --selected-outline: #5cb85c;
+  --shadow-color: rgba(0, 0, 0, 0.08);
+}
+
+.dark-mode {
+  --day-bg: #1f1f23;
+  --day-text: #f4f4f5;
+  --weekend-bg: #2b2b31;
+  --header-text: #d6d6d6;
+  --border-color: #3a3a40;
+  --selected-outline: #81e081;
+  --shadow-color: rgba(0, 0, 0, 0.5);
+}
+
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -7,46 +27,49 @@
   font-family: "Inter", sans-serif;
   width: 100%;
   height: 100%;
+  color: var(--day-text);
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 .calendar-header {
   text-align: center;
   font-weight: 600;
-  color: #444;
+  color: var(--header-text);
   font-size: clamp(0.65rem, 0.8vw, 0.85rem);
   padding: clamp(2px, 0.3vw, 4px);
 }
 
 .calendar-day {
   border-radius: 8px;
-  border: 1px solid #ddd;
-  background: #ffffff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--border-color);
+  background: var(--day-bg);
+  box-shadow: 0 1px 3px var(--shadow-color);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   transition: all 0.15s ease;
   cursor: pointer;
-  aspect-ratio: 1 / 1; /* cuadrado dinámico */
+  aspect-ratio: 1 / 1;
   font-size: clamp(0.75rem, 0.9vw, 1rem);
   overflow: hidden;
+  color: var(--day-text);
 }
 
 .calendar-day:hover {
   transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 2px 4px var(--shadow-color);
 }
 
 .calendar-day.weekend {
   color: #999;
-  background: #f5f5f5 !important;
+  background: var(--weekend-bg) !important;
   cursor: not-allowed;
 }
 
 .calendar-day.selected {
-  outline: 2px solid #5cb85c;
-  background: #dfffe0 !important;
+  outline: 2px solid var(--selected-outline);
+  background: rgba(92, 184, 92, 0.2) !important;
 }
 
 .day-number {
@@ -63,4 +86,14 @@
   white-space: nowrap;
   overflow: hidden;
   text-align: center;
+}
+
+.disabled-month {
+  pointer-events: none;
+  opacity: 0.6;
+  user-select: none;
+}
+
+.disabled-day {
+  cursor: not-allowed !important;
 }

@@ -3,6 +3,31 @@
   padding: 10px;
   margin: 10px;
 }
+
+/* === VARIABLES DE COLOR PARA AMBOS MODOS === */
+:root {
+  --bg-main: #fafafa;
+  --text-main: #333;
+  --card-bg: #ffffff;
+  --border-color: rgba(0, 0, 0, 0.08);
+  --shadow-color: rgba(0, 0, 0, 0.05);
+  --button-bg: #f2f2f2;
+  --button-text: #333;
+  --button-hover-bg: #e5e5e5;
+}
+
+.dark-mode {
+  --bg-main: #18181b;
+  --text-main: #f4f4f5;
+  --card-bg: #1f1f23;
+  --border-color: #2f2f37;
+  --shadow-color: rgba(0, 0, 0, 0.4);
+  --button-bg: #2d2d33;
+  --button-text: #f4f4f5;
+  --button-hover-bg: #3a3a40;
+}
+
+/* === CONTENEDOR PRINCIPAL === */
 .calendar-app-container {
   display: flex;
   flex-direction: column;
@@ -14,24 +39,40 @@
   margin: 0 auto;
   padding: 16px;
 
-  background: #fafafa;
+  background: var(--bg-main);
   border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 20px var(--shadow-color);
+  color: var(--text-main);
+  transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* === TEXTOS === */
 .calendar-app-container h2,
 .calendar-app-container h3 {
-  color: #333;
+  color: var(--text-main);
   font-weight: 600;
   margin-bottom: 12px;
+  transition: color 0.3s ease;
 }
 
+/* === BOTONES === */
 .calendar-app-container button {
   font-family: "Segoe UI", sans-serif;
   cursor: pointer;
   transition: all 0.2s ease;
+  background: var(--button-bg);
+  color: var(--button-text);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 6px 12px;
 }
 
 .calendar-app-container button:hover {
   transform: scale(1.02);
+  background: var(--button-hover-bg);
+}
+
+/* === SOMBRAS SUAVES === */
+.calendar-app-container {
+  backdrop-filter: blur(4px);
 }

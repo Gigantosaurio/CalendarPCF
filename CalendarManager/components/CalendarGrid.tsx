@@ -9,6 +9,7 @@ interface CalendarGridProps {
   selectedDays: number[];
   onDayClick: (day: number) => void;
   onSelectRange?: (days: number[]) => void;
+  darkMode?: boolean; // 👈 añadimos esta prop
 }
 
 export const AbsenceTextToType: Record<string, AbsenceType> = Object.fromEntries(
@@ -21,7 +22,8 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
   absences,
   selectedDays,
   onDayClick,
-  onSelectRange
+  onSelectRange,
+  darkMode = false // por defecto, modo claro
 }) => {
   const [dragging, setDragging] = React.useState(false);
   const [rangeStart, setRangeStart] = React.useState<number | null>(null);
@@ -66,9 +68,14 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
   };
 
   return (
-    <div className="calendar-grid" onMouseLeave={handleMouseUp}>
-      {daysOfWeek.map(d => (
-        <div key={d} className="calendar-header">{d}</div>
+    <div
+      className={`calendar-grid ${darkMode ? "dark-mode" : ""}`}
+      onMouseLeave={handleMouseUp}
+    >
+      {daysOfWeek.map((d) => (
+        <div key={d} className="calendar-header">
+          {d}
+        </div>
       ))}
 
       {gridDays.map((day, i) => {
@@ -79,12 +86,12 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
         const absenceType = absences[day] as AbsenceType | undefined;
         const absenceColor = absenceType
           ? AbsenceColors[AbsenceTextToType[absenceType]]
-          : "#fff";
+          : "var(--day-bg)";
 
         const classes = [
           "calendar-day",
           weekend && "weekend",
-          isSelected && "selected"
+          isSelected && "selected",
         ]
           .filter(Boolean)
           .join(" ");
@@ -93,11 +100,11 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
           <div
             key={i}
             className={classes}
-            style={{ backgroundColor: weekend ? "#f5f5f5" : absenceColor }}
+            style={{ backgroundColor: weekend ? "var(--weekend-bg)" : absenceColor }}
             onClick={() => {
               if (!weekend) {
                 if (isSelected) {
-                  onSelectRange?.(selectedDays.filter(d => d !== day));
+                  onSelectRange?.(selectedDays.filter((d) => d !== day));
                 } else {
                   onSelectRange?.([...selectedDays, day]);
                 }

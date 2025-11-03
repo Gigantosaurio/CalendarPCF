@@ -22,6 +22,7 @@ interface MonthlyViewProps {
   year: number;
   datasource: AbsenceRecord[];
   userid: string;
+  isDarkMode: boolean;
   onBack: () => void;
   onSave?: (records: AbsenceRecord[]) => void;
   onDelete?: (records: any[]) => void;
@@ -32,6 +33,7 @@ export const MonthlyView: React.FC<MonthlyViewProps> = ({
   year,
   datasource,
   userid,
+  isDarkMode,
   onBack,
   onSave,
   onDelete
@@ -43,9 +45,8 @@ export const MonthlyView: React.FC<MonthlyViewProps> = ({
   React.useEffect(() => {
     const absMap: Record<number, string> = {};
     const guidMap: Record<number, string> = {};
-    // Filtrar los registros del datasource por el userid actual
-    datasource = datasource.filter(e => e.userid === userid);
-    datasource.forEach(e => {
+    const userData = datasource.filter(e => e.userid === userid);
+    userData.forEach(e => {
       if (e.month === month && e.year === year) {
         absMap[e.day] = e.type;
         guidMap[e.day] = e.guid;
@@ -53,7 +54,7 @@ export const MonthlyView: React.FC<MonthlyViewProps> = ({
     });
     setAbsences(absMap);
     setDayToGuid(guidMap);
-  }, [datasource, month, year]);
+  }, [datasource, month, year, userid]);
 
   const handleAssignAbsence = (type: AbsenceType) => {
     const newAbsences = { ...absences };
@@ -86,13 +87,17 @@ export const MonthlyView: React.FC<MonthlyViewProps> = ({
     setSelectedDays([]);
   };
 
-  const monthName = new Date(year, month).toLocaleString("es-ES", { month: "long" });
+  const monthName = new Date(year, month).toLocaleString("es-ES", {
+    month: "long"
+  });
 
   return (
-    <div className="monthly-container">
+    <div className={`monthly-container ${isDarkMode ? "dark" : "light"}`}>
       {/* CABECERA */}
       <div className="monthly-header">
-        <button className="back-btn" onClick={onBack}>⬅ Volver</button>
+        <button className="back-btn" onClick={onBack}>
+          ⬅ Volver
+        </button>
         <h2 className="monthly-title">
           {monthName.charAt(0).toUpperCase() + monthName.slice(1)} {year}
         </h2>
@@ -102,6 +107,7 @@ export const MonthlyView: React.FC<MonthlyViewProps> = ({
       <div className="monthly-body">
         <div className="absence-panel">
           <AbsenceSelector
+            isDarkMode={isDarkMode}
             onAssign={handleAssignAbsence}
             onDelete={handleDeleteAbsence}
           />

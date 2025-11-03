@@ -1,44 +1,56 @@
-:root {
-  /* Paleta Light (predeterminada) */
-  --color-bg: #fafafa;
-  --color-primary: #ffffff;
-  --color-secondary: #0070ba;
-  --color-text-primary: #080808;
-  --color-text-secondary: #585858;
-  --color-border-subtle: #eeeeee;
-  --color-shadow: rgba(0, 0, 0, 0.05);
+/* ============================================
+   Annual View - Estilo Moderno / Fluent
+   ============================================ */
 
-  /* Colores de botones específicos */
+:root {
+  /* ===== Modo Claro ===== */
+  --color-bg: #f9fafb;                 /* Fondo general */
+  --color-surface: #ffffff;            /* Tarjetas ("islas") */
+  --color-surface-hover: #f3f4f6;      /* Hover sobre tarjetas */
+  --color-border-subtle: #e5e7eb;      /* Bordes suaves */
+  --color-text-primary: #111827;       /* Texto principal oscuro */
+  --color-text-secondary: #4b5563;     /* Texto secundario */
+  --color-secondary: #0070ba;          /* Azul Fluent #2563eb --> #0070ba*/
+  --color-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --color-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.08);
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --transition-fast: 0.2s ease-in-out;
+
+  /* Botones específicos */
   --color-admin-bg: #2e7d32;
   --color-admin-hover: #1b5e20;
 }
 
+/* ===== Modo Oscuro ===== */
 .annual-view-wrapper.dark-mode {
-  /* Paleta Dark */
-  --color-bg: #0a0a0a;
-  --color-primary: #1a1a1a;
-  --color-secondary: #0070ba; /* Mismo azul */
-  --color-text-primary: #fafafa;
-  --color-text-secondary: #a3a3a3;
-  --color-border-subtle: #2c2c2c;
-  --color-shadow: rgba(0, 0, 0, 0.2);
+  --color-bg: #18181b;
+  --color-surface: #1b1b1b;
+  --color-surface-hover: #2a2a2a;
+  --color-border-subtle: #2f2f2f;
+  --color-text-primary: #f5f5f5;
+  --color-text-secondary: #a1a1a1;
+  --color-secondary: #3b82f6; /* Azul acento Microsoft */
+  --color-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --color-shadow-md: 0 6px 12px rgba(0, 0, 0, 0.45);
 }
 
-/* Contenedor principal que usa las variables */
+/* ===== Layout General ===== */
 .annual-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 24px;
   background: var(--color-bg);
   color: var(--color-text-primary);
   width: 100%;
   height: 100%;
+  padding: 32px 24px;
   box-sizing: border-box;
-  /* Usamos la fuente más común en Power Apps para coherencia */
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  transition: background var(--transition-fast), color var(--transition-fast);
 }
 
+/* ===== Header ===== */
 .annual-header {
   display: flex;
   align-items: center;
@@ -48,164 +60,172 @@
 }
 
 .year-title {
-  font-size: 1.7rem; /* Ajustado para elegancia */
-  color: var(--color-text-primary);
+  font-size: 1.8rem;
   font-weight: 600;
-  margin: 0;
-  min-width: 200px;
   text-align: center;
+  margin: 0;
+  color: var(--color-text-primary);
+  transition: color var(--transition-fast);
 }
 
 .year-nav {
-  background: var(--color-primary);
+  background: var(--color-surface);
   border: 1px solid var(--color-border-subtle);
   color: var(--color-text-secondary);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border-radius: 50%; /* Botones redondos */
-  width: 36px;
-  height: 36px;
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 1px 3px var(--color-shadow);
+  cursor: pointer;
+  box-shadow: var(--color-shadow-sm);
+  transition: all var(--transition-fast);
 }
 
 .year-nav:hover {
   color: var(--color-secondary);
   border-color: var(--color-secondary);
-  transform: scale(1.05);
+  box-shadow: var(--color-shadow-md);
+  transform: scale(1.07);
 }
 
 .year-nav svg {
   width: 1em;
 }
 
+/* ===== Meses (Tarjetas) ===== */
 .months-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 4 columnas (dará 3 filas) */
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
   width: 100%;
-  max-width: 900px; /* Un poco más de espacio */
+  max-width: 900px;
+  transition: all var(--transition-fast);
 }
 
 .month-card {
-  background: var(--color-primary);
-  border-radius: 12px;
-  padding: 20px 10px;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: 24px 12px;
   text-align: center;
   cursor: pointer;
-  /* Sombra sutil como en tu app principal */
-  box-shadow: 0 1px 2px var(--color-shadow), 0 2px 4px var(--color-shadow);
-  transition: all 0.25s ease;
+  border: 1px solid var(--color-border-subtle);
+  box-shadow: var(--color-shadow-sm);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
-  border: 1px solid var(--color-border-subtle);
+  gap: 10px;
+  transition: all var(--transition-fast);
 }
 
 .month-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 8px var(--color-shadow), 0 8px 16px var(--color-shadow);
+  background: var(--color-surface-hover);
   border-color: var(--color-secondary);
+  transform: translateY(-3px);
+  box-shadow: var(--color-shadow-md);
 }
 
 .month-icon {
-  font-size: 2.2rem;
-  color: var(--color-secondary); /* Azul de tu tema */
+  font-size: 2rem;
+  color: var(--color-secondary);
+  transition: color var(--transition-fast);
 }
 
 .month-name {
-  font-weight: 600; /* Un poco más de peso */
-  color: var(--color-text-primary);
+  font-weight: 600;
   font-size: 1.1rem;
+  color: var(--color-text-primary);
 }
 
+/* ===== Footer ===== */
 .annual-footer {
-  margin-top: 32px;
+  margin-top: 40px;
   display: flex;
   gap: 12px;
   justify-content: center;
+  flex-wrap: wrap;
   width: 100%;
   max-width: 900px;
 }
 
 .footer-btn {
   border: none;
-  border-radius: 8px;
-  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  padding: 10px 22px;
   font-size: 1rem;
   font-weight: 500;
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  transition: all 0.2s ease;
-  flex-grow: 1; /* Ocupan espacio */
-  max-width: 300px; /* Pero no son gigantes */
+  cursor: pointer;
+  flex-grow: 1;
+  max-width: 300px;
+  transition: all var(--transition-fast);
 }
 
 .footer-btn svg {
-   margin-bottom: 2px; /* Pequeño ajuste visual */
+  margin-bottom: 2px;
 }
 
 .summary-btn {
   background: var(--color-secondary);
-  color: white;
+  color: #fff;
+  box-shadow: var(--color-shadow-sm);
 }
 
 .summary-btn:hover {
-  opacity: 0.85;
+  box-shadow: var(--color-shadow-md);
+  transform: translateY(-2px);
+  opacity: 0.95;
 }
 
 .admin-btn {
   background: var(--color-admin-bg);
-  color: white;
+  color: #fff;
+  box-shadow: var(--color-shadow-sm);
 }
 
 .admin-btn:hover {
   background: var(--color-admin-hover);
+  transform: translateY(-2px);
 }
 
-/* Media Queries para móviles */
+/* ===== Responsivo ===== */
 @media (max-width: 768px) {
   .annual-container {
-    padding: 16px;
+    padding: 20px;
   }
-  
+
   .year-title {
     font-size: 1.4rem;
-    min-width: 150px;
   }
-  
+
   .months-grid {
-     grid-template-columns: repeat(3, 1fr); /* 3 columnas en móvil */
-     gap: 8px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
   }
-  
+
   .month-card {
-    padding: 14px;
-    gap: 4px;
+    padding: 16px;
   }
 
   .month-icon {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
   }
-  
+
   .month-name {
-    font-size: 0.9rem;
+    font-size: 1rem;
   }
 
   .annual-footer {
     flex-direction: column;
     gap: 10px;
   }
-  
+
   .footer-btn {
     width: 100%;
     max-width: 100%;
   }
 }
-

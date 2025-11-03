@@ -1,3 +1,27 @@
+:root {
+  --bg-color: #fafafa;
+  --text-color: #333;
+  --card-bg: #fff;
+  --card-text: #555;
+  --highlight: #1976d2;
+  --border: #ddd;
+  --stat-bg: #f8f9fb;
+  --stat-bg-hover: #eef3f8;
+  --shadow: rgba(0, 0, 0, 0.08);
+}
+
+.dark-mode {
+  --bg-color: #1e1e22;
+  --text-color: #f4f4f5;
+  --card-bg: #2a2a30;
+  --card-text: #ddd;
+  --highlight: #64b5f6;
+  --border: #3a3a40;
+  --stat-bg: #2f3035;
+  --stat-bg-hover: #3a3a45;
+  --shadow: rgba(0, 0, 0, 0.5);
+}
+
 .summary-container {
   display: flex;
   flex-direction: column;
@@ -7,12 +31,15 @@
   width: 100%;
   height: 100%;
   box-sizing: border-box;
+  background: var(--bg-color);
+  color: var(--text-color);
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 .summary-title {
   font-size: clamp(1.3rem, 1.8vw, 1.8rem);
   font-weight: 700;
-  color: #333;
+  color: var(--text-color);
   margin-bottom: 1rem;
   text-align: center;
 }
@@ -26,36 +53,35 @@
 }
 
 .summary-card {
-  background: #fff;
-  border-radius: 14px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  padding: 1rem;
-  text-align: center;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background: var(--card-bg) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 2px 8px var(--shadow) !important;
+  padding: 1rem !important;
+  text-align: center !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s ease !important;
 }
 
 .summary-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 10px var(--shadow);
 }
 
 .card-title {
   font-size: clamp(0.9rem, 1vw, 1.1rem);
   font-weight: 600;
-  color: #555;
+  color: var(--card-text);
   margin-bottom: 0.5rem;
 }
 
 .chart-container {
   width: 100%;
-  height: 180px; /* tamaño base */
+  height: 180px;
 }
 
 .chart-taller {
-  height: 220px; /* 👈 más alto para mostrar completo el gráfico */
+  height: 220px;
 }
 
-/* Tarjeta de totales */
 .summary-card-wide {
   grid-column: span 2;
   padding: 1rem 1.5rem;
@@ -69,7 +95,7 @@
 }
 
 .summary-stat {
-  background: #f8f9fb;
+  background: var(--stat-bg);
   border-radius: 8px;
   padding: 0.6rem;
   display: flex;
@@ -79,18 +105,18 @@
 }
 
 .summary-stat:hover {
-  background: #eef3f8;
+  background: var(--stat-bg-hover);
 }
 
 .stat-label {
   font-size: 0.85rem;
-  color: #555;
+  color: var(--card-text);
 }
 
 .stat-value {
   font-size: 1.2rem;
   font-weight: 700;
-  color: #1976d2;
+  color: var(--highlight);
   margin-top: 0.2rem;
 }
 
@@ -99,7 +125,7 @@
 }
 
 .back-btn {
-  background-color: #2196f3;
+  background-color: var(--highlight);
   color: white;
   border: none;
   border-radius: 8px;
@@ -110,7 +136,7 @@
 }
 
 .back-btn:hover {
-  background-color: #1976d2;
+  background-color: #1565c0;
   transform: scale(1.05);
 }
 
@@ -119,15 +145,12 @@
   .summary-card-wide {
     grid-column: span 1;
   }
-
   .chart-container {
     height: 160px;
   }
-
   .chart-taller {
     height: 190px;
   }
-
   .summary-stats-grid {
     grid-template-columns: repeat(2, 1fr);
   }
