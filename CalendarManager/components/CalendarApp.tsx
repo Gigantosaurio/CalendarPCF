@@ -4,6 +4,7 @@ import { MonthlyView } from "./MonthlyView";
 import { SummaryView } from "./SummaryView";
 import { AdminDashboard } from "./AdminDashboard";
 import "../css/CalendarApp.css";
+import "../css/DesignSystem.css";
 
 type View = "annual" | "monthly" | "summary" | "admin";
 
@@ -11,6 +12,7 @@ interface CalendarAppProps {
   datasource: any[]; // Lista de eventos que viene del Canvas
   admin: boolean; // Indica si el usuario es admin
   userid: string; // ID del usuario actual
+  darkMode: boolean; // Indica si el modo oscuro está activado
   onSave: (event: any) => void; // Actualizar un evento
   onDelete: (event: any) => void; // Eliminar un evento
 }
@@ -19,6 +21,7 @@ export const CalendarApp: React.FC<CalendarAppProps> = ({
   datasource,
   admin,
   userid,
+  darkMode,
   onSave,
   onDelete
 }) => {
@@ -32,14 +35,14 @@ export const CalendarApp: React.FC<CalendarAppProps> = ({
     setSelectedYear(year);
     setCurrentView("monthly");
   };
-
+ 
   return (
     <div className="calendar-app-container">
       {currentView === "annual" && (
         <AnnualView
           year={selectedYear}
           admin={admin}
-          isDarkMode={false}
+          isDarkMode={darkMode}
           onSelectMonth={goToMonth}
           onViewSummary={() => setCurrentView("summary")}
           onAdminDashboard={() => setCurrentView("admin")}
@@ -52,6 +55,7 @@ export const CalendarApp: React.FC<CalendarAppProps> = ({
           year={selectedYear}
           datasource={datasource}
           userid={(selectedUserId ? selectedUserId : userid)}
+          //isDarkMode={darkMode}
           onBack={() => setCurrentView("annual")}
           onSave={onSave}
           onDelete={onDelete}
@@ -63,12 +67,14 @@ export const CalendarApp: React.FC<CalendarAppProps> = ({
           onBack={() => setCurrentView("annual")}
           userid={userid}
           datasource={datasource}
+          //isDarkMode={darkMode}
         />
       )}
 
       {currentView === "admin" && (
           <AdminDashboard
             datasource={datasource}
+            //isDarkMode={darkMode}
             onBack={() => setCurrentView("annual")}
             onAdminMonthlyView={(userid: string) => {
               setSelectedUserId(userid); 

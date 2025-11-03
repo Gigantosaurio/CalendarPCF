@@ -49,12 +49,14 @@ export class CalendarManager implements ComponentFramework.ReactControl<IInputs,
         this.admin = context.parameters.admin?.raw || false;
         this.userid = context.parameters.userid?.raw || "";
         this.darkMode = context.parameters.darkMode?.raw || false;
+        //alert("Dark Mode: " + this.darkMode);
 
         // Render del componente React
         return React.createElement(CalendarioAnual, {
             datasource: this.datasource ? JSON.parse(this.datasource) : [],
             admin: this.admin,
             userid: this.userid,
+            darkMode: this.darkMode,
             onRecordsChange: (newRecords: any, deletedrecords: any) => {
                 // Convertir a string JSON y guardar localmente
                 this.newrecords = JSON.stringify(newRecords);
