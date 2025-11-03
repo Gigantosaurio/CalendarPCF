@@ -4,7 +4,6 @@ import { MonthlyView } from "./MonthlyView";
 import { SummaryView } from "./SummaryView";
 import { AdminDashboard } from "./AdminDashboard";
 import "../css/CalendarApp.css";
-import "../css/DesignSystem.css";
 
 type View = "annual" | "monthly" | "summary" | "admin";
 
