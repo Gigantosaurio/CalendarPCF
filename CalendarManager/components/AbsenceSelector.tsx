@@ -9,7 +9,10 @@ interface AbsenceSelectorProps {
 }
 
 export const AbsenceSelector: React.FC<AbsenceSelectorProps> = ({ isDarkMode, onAssign, onDelete }) => {
-  const absenceTypes = Object.keys(AbsenceDescriptions) as AbsenceType[];
+  const absenceTypesNoFiltered = Object.keys(AbsenceDescriptions) as AbsenceType[];
+  // eliminamos el tipo de ausencia vacaciones confirmadas ya que estas no se pueden asignar desde el selector
+  // Tampoco mostramos Festivos (BH) en el selector, petición del usuario (pero mantenemos soporte interno)
+  const absenceTypes = absenceTypesNoFiltered.filter(type => type !== "HP" && type !== "BH");
 
   return (
     <div className={`absence-selector ${isDarkMode ? "dark-mode" : ""}`}>
@@ -23,20 +26,23 @@ export const AbsenceSelector: React.FC<AbsenceSelectorProps> = ({ isDarkMode, on
             className="absence-btn"
             style={{
               backgroundColor: AbsenceColors[type] + 95,
-            }} 
+            }}
             onClick={() => {
-               if (type === "") {
-                 onDelete();
-               } else {
-                 onAssign(type);
-               }
-             }}
+              if (type === "") {
+                onDelete();
+                // Si se selecciona Vacaciones, en lugar de asignar, asignamos vacaciones pdte aprobación
+              } else if (type === "H") {
+                onAssign("HP");
+              } else {
+                onAssign(type);
+              }
+            }}
           >
-            <span 
-            style={{
-              backgroundColor: AbsenceColors[type],
-            }} 
-            className="absence-code">
+            <span
+              style={{
+                backgroundColor: AbsenceColors[type],
+              }}
+              className="absence-code">
               {type}
             </span>
             <span className="absence-label">{AbsenceDescriptions[type]}</span>

@@ -16,7 +16,7 @@ export type AbsenceType =
 "PaP Nocturno"|
 "Ausencia Legal"|
 "Salida de Proyecto"|
-"Vacaciones NO Confirmadas";
+"Vacaciones pdte Aprobación";
 
 export interface AbsenceRecord {
   day: number;

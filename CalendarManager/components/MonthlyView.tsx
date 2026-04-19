@@ -21,8 +21,10 @@ interface MonthlyViewProps {
   month: number;
   year: number;
   datasource: AbsenceRecord[];
+  globalabsences: AbsenceRecord[];
   userid: string;
   isDarkMode: boolean;
+  absencePanel: boolean;
   onBack: () => void;
   onSave?: (records: AbsenceRecord[]) => void;
   onDelete?: (records: any[]) => void;
@@ -32,14 +34,17 @@ export const MonthlyView: React.FC<MonthlyViewProps> = ({
   month,
   year,
   datasource,
+  globalabsences,
   userid,
   isDarkMode,
+  absencePanel,
   onBack,
   onSave,
   onDelete
 }) => {
   const [selectedDays, setSelectedDays] = React.useState<number[]>([]);
   const [absences, setAbsences] = React.useState<Record<number, string>>({});
+  const [globalAbsencesMap, setGlobalAbsencesMap] = React.useState<Record<number, string>>({});
   const [dayToGuid, setDayToGuid] = React.useState<Record<number, string>>({});
 
   React.useEffect(() => {
@@ -54,6 +59,17 @@ export const MonthlyView: React.FC<MonthlyViewProps> = ({
     });
     setAbsences(absMap);
     setDayToGuid(guidMap);
+
+    const globalsMap: Record<number, string> = {};
+    if (globalabsences) {
+      globalabsences.forEach(e => {
+        if (e.month === month && e.year === year) {
+          globalsMap[e.day] = e.type;
+        }
+      });
+    }
+    setGlobalAbsencesMap(globalsMap);
+
   }, [datasource, month, year, userid]);
 
   const handleAssignAbsence = (type: AbsenceType) => {
@@ -98,6 +114,9 @@ export const MonthlyView: React.FC<MonthlyViewProps> = ({
         <button className="back-btn" onClick={onBack}>
           ⬅ Volver
         </button>
+        <p className="monthly-text">
+          Selecciona los días y asigna una ausencia
+        </p>
         <h2 className="monthly-title">
           {monthName.charAt(0).toUpperCase() + monthName.slice(1)} {year}
         </h2>
@@ -105,24 +124,41 @@ export const MonthlyView: React.FC<MonthlyViewProps> = ({
 
       {/* CONTENIDO EN DOS COLUMNAS */}
       <div className="monthly-body">
-        <div className="absence-panel">
-          <AbsenceSelector
-            isDarkMode={isDarkMode}
-            onAssign={handleAssignAbsence}
-            onDelete={handleDeleteAbsence}
-          />
-        </div>
-
+        
+        {/* Mostramos el panel de ausencias si es true, ahora forzado a if true */}
+        {
+          absencePanel && (
+            <div className="absence-panel">
+              <AbsenceSelector
+                isDarkMode={isDarkMode}
+                onAssign={handleAssignAbsence}
+                onDelete={handleDeleteAbsence}
+              />
+            </div>
+          )
+        }
         <div className="calendar-panel">
           <CalendarGrid
             year={year}
             month={month}
             absences={absences}
+            globalAbsences={globalAbsencesMap}
             selectedDays={selectedDays}
             onDayClick={() => {}}
             onSelectRange={(range) => setSelectedDays(range)}
           />
         </div>
+        {
+          !absencePanel && (
+            <div className="absence-panel">
+              <AbsenceSelector
+                isDarkMode={isDarkMode}
+                onAssign={handleAssignAbsence}
+                onDelete={handleDeleteAbsence}
+              />
+            </div>
+          )
+        }
       </div>
     </div>
   );
