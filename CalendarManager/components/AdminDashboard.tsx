@@ -29,15 +29,30 @@ interface SummaryAdminViewProps {
   datasource: AbsenceRecordAdmin[];
   onBack: () => void;
   onAdminMonthlyView: (userid: string) => void;
+  onCurrentUserChangeProp: (value: string) => void;
   isDarkMode?: boolean;
 }
 
-export const AdminDashboard: React.FC<SummaryAdminViewProps> = ({ datasource, onBack, onAdminMonthlyView, isDarkMode = false }) => {
+export const AdminDashboard: React.FC<SummaryAdminViewProps> = ({ datasource, onBack, onAdminMonthlyView, onCurrentUserChangeProp, isDarkMode = false }) => {
   const [yearFilter, setYearFilter] = React.useState<number | "all">("all");
   const [userFilter, setUserFilter] = React.useState<string>("all");
   const [currentPage, setCurrentPage] = React.useState(1);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [userSearchText, setUserSearchText] = React.useState("");
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = React.useState(false);
+  const userDropdownRef = React.useRef<HTMLDivElement>(null);
 
+  // Cerrar dropdown al hacer click fuera
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (userDropdownRef.current && !userDropdownRef.current.contains(event.target as Node)) {
+        setIsUserDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+  
   const filteredData = datasource
     .filter(d =>
       (yearFilter === "all" || d.year === yearFilter) &&
@@ -148,18 +163,61 @@ export const AdminDashboard: React.FC<SummaryAdminViewProps> = ({ datasource, on
 
           <div className="filter-item">
             Usuario:
-            <select
-              value={userFilter}
-              onChange={e => {
-                setUserFilter(e.target.value);
-                setCurrentPage(1);
-              }}
-            >
-              <option value="all">Todos</option>
-              {users.map(u => (
-                <option key={u.userid} value={u.userid}>{u.username}</option>
-              ))}
-            </select>
+            <div className="user-filter-dropdown" ref={userDropdownRef}>
+              <button
+                className="user-filter-trigger"
+                onClick={() => {
+                  setIsUserDropdownOpen(!isUserDropdownOpen);
+                  setUserSearchText("");
+                }}
+              >
+                {userFilter === "all"
+                  ? "Todos"
+                  : users.find(u => u.userid === userFilter)?.username || userFilter}
+                <span className="user-filter-arrow">{isUserDropdownOpen ? "▲" : "▼"}</span>
+              </button>
+              {isUserDropdownOpen && (
+                <div className="user-filter-panel">
+                  <input
+                    type="text"
+                    className="user-filter-search"
+                    placeholder="🔍 Buscar usuario..."
+                    value={userSearchText}
+                    onChange={e => setUserSearchText(e.target.value)}
+                    autoFocus
+                  />
+                  <ul className="user-filter-list">
+                    <li
+                      className={`user-filter-option ${userFilter === "all" ? "selected" : ""}`}
+                      onClick={() => {
+                        setUserFilter("all");
+                        setCurrentPage(1);
+                        setIsUserDropdownOpen(false);
+                      }}
+                    >
+                      Todos
+                    </li>
+                    {users
+                      .filter(u =>
+                        u.username.toLowerCase().includes(userSearchText.toLowerCase())
+                      )
+                      .map(u => (
+                        <li
+                          key={u.userid}
+                          className={`user-filter-option ${userFilter === u.userid ? "selected" : ""}`}
+                          onClick={() => {
+                            setUserFilter(u.userid);
+                            setCurrentPage(1);
+                            setIsUserDropdownOpen(false);
+                          }}
+                        >
+                          {u.username}
+                        </li>
+                      ))}
+                  </ul>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -215,7 +273,12 @@ export const AdminDashboard: React.FC<SummaryAdminViewProps> = ({ datasource, on
       {/* Creamos un boton que se mostrara si el userFilter no es "all" y al darle al boton navegaremos al calendario de ese user */}
       {userFilter !== "all" && (
         <div className="summary-footer">
-          <button className="back-btn" onClick={() => onAdminMonthlyView(userFilter)}>Ver Calendario</button>
+          <button className="back-btn" 
+            onClick={
+              () => {onAdminMonthlyView(userFilter);
+                onCurrentUserChangeProp(userFilter)}
+          }>
+            Ver Calendario</button>
         </div>
       )}
 

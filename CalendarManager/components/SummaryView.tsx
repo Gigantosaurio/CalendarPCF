@@ -39,8 +39,10 @@ export const SummaryView: React.FC<SummaryViewProps> = ({
 }) => {
   const COLORS = ["#42a5f5", "#66bb6a", "#ffb74d", "#e57373", "#9575cd", "#4caf50", "#ff8a65"];
 
-  // ---- Filtrar por usuario ----
-  datasource = datasource.filter((rec) => rec.userid === userid);
+  const currentYear = new Date().getFullYear();
+
+  // ---- Filtrar por usuario y año actual ----
+  datasource = datasource.filter((rec) => rec.userid === userid && rec.year === currentYear);
 
   // ---- Agrupar por tipo ----
   const typeMap: Record<string, number> = {};
@@ -65,7 +67,7 @@ export const SummaryView: React.FC<SummaryViewProps> = ({
 
   return (
     <div className={`summary-container ${darkMode ? "dark-mode" : ""}`}>
-      <h2 className="summary-title">Resumen de Ausencias</h2>
+      <h2 className="summary-title">Resumen de Ausencias — {currentYear}</h2>
 
       <div className="summary-grid">
         {/* Distribución por tipo */}

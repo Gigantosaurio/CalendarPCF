@@ -2,6 +2,7 @@ import * as React from "react";
 import { CalendarGrid } from "./CalendarGrid";
 import { AbsenceSelector } from "./AbsenceSelector";
 import { AbsenceType } from "../types/absence";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import "../css/MonthlyView.css";
 
 export interface AbsenceRecord {
@@ -25,9 +26,12 @@ interface MonthlyViewProps {
   userid: string;
   isDarkMode: boolean;
   absencePanel: boolean;
+  calendarUserId: string;
+  allowPastEdition: boolean;
   onBack: () => void;
   onSave?: (records: AbsenceRecord[]) => void;
   onDelete?: (records: any[]) => void;
+  onSelectMonth: (month: number, year: number) => void;
 }
 
 export const MonthlyView: React.FC<MonthlyViewProps> = ({
@@ -38,6 +42,9 @@ export const MonthlyView: React.FC<MonthlyViewProps> = ({
   userid,
   isDarkMode,
   absencePanel,
+  calendarUserId,
+  allowPastEdition,
+  onSelectMonth,
   onBack,
   onSave,
   onDelete
@@ -50,7 +57,7 @@ export const MonthlyView: React.FC<MonthlyViewProps> = ({
   React.useEffect(() => {
     const absMap: Record<number, string> = {};
     const guidMap: Record<number, string> = {};
-    const userData = datasource.filter(e => e.userid === userid);
+    const userData = datasource.filter(e => e.userid === calendarUserId);
     userData.forEach(e => {
       if (e.month === month && e.year === year) {
         absMap[e.day] = e.type;
@@ -107,6 +114,29 @@ export const MonthlyView: React.FC<MonthlyViewProps> = ({
     month: "long"
   });
 
+  //Flechas de cambio de mes, controlando también el cambio de año
+  const controlMesAnio = (accion: string) =>{
+
+    if(accion === 'avanzar'){
+      if(month == 11){
+        year++;
+        month = 0;
+      }else{
+        month++;
+      }
+      
+    }else{
+      if(month == 0){
+        year--;
+        month = 11;
+      }else{
+        month--;
+      }
+    }
+
+    onSelectMonth(month, year)
+  }
+
   return (
     <div className={`monthly-container ${isDarkMode ? "dark" : "light"}`}>
       {/* CABECERA */}
@@ -117,9 +147,11 @@ export const MonthlyView: React.FC<MonthlyViewProps> = ({
         <p className="monthly-text">
           Selecciona los días y asigna una ausencia
         </p>
+        <button onClick={() => controlMesAnio('retroceder')}><FaChevronLeft /></button>
         <h2 className="monthly-title">
           {monthName.charAt(0).toUpperCase() + monthName.slice(1)} {year}
         </h2>
+        <button onClick={() => controlMesAnio('avanzar')}><FaChevronRight /></button>
       </div>
 
       {/* CONTENIDO EN DOS COLUMNAS */}
@@ -131,6 +163,7 @@ export const MonthlyView: React.FC<MonthlyViewProps> = ({
             <div className="absence-panel">
               <AbsenceSelector
                 isDarkMode={isDarkMode}
+                hasSelectedDays={selectedDays.length > 0}
                 onAssign={handleAssignAbsence}
                 onDelete={handleDeleteAbsence}
               />
@@ -144,6 +177,9 @@ export const MonthlyView: React.FC<MonthlyViewProps> = ({
             absences={absences}
             globalAbsences={globalAbsencesMap}
             selectedDays={selectedDays}
+            calendarUserId={calendarUserId}
+            userid={userid}  
+            allowPastEdition={allowPastEdition}
             onDayClick={() => {}}
             onSelectRange={(range) => setSelectedDays(range)}
           />
@@ -153,6 +189,7 @@ export const MonthlyView: React.FC<MonthlyViewProps> = ({
             <div className="absence-panel">
               <AbsenceSelector
                 isDarkMode={isDarkMode}
+                hasSelectedDays={selectedDays.length > 0}
                 onAssign={handleAssignAbsence}
                 onDelete={handleDeleteAbsence}
               />

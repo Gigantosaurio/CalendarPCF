@@ -14,6 +14,9 @@ interface CalendarAppProps {
   userid: string; // ID del usuario actual
   darkMode: boolean; // Indica si el modo oscuro está activado
   absencePanel: boolean; // Indica si el panel de ausencias está a la izquierda o derecha
+  allowPastEdition: boolean; // Permite la edición en el pasado
+  onCurrentUserChange: (value: string) => void; // Notificar cambio de usuario visualizado
+  onGoBack: () => void; // Botón Volver → Navigate en Canvas
   onSave: (event: any) => void; // Actualizar un evento
   onDelete: (event: any) => void; // Eliminar un evento
 }
@@ -25,6 +28,9 @@ export const CalendarApp: React.FC<CalendarAppProps> = ({
   userid,
   darkMode,
   absencePanel,
+  allowPastEdition,
+  onCurrentUserChange,
+  onGoBack,
   onSave,
   onDelete
 }) => {
@@ -40,12 +46,17 @@ export const CalendarApp: React.FC<CalendarAppProps> = ({
   };
 
   // Determinar si estamos viendo el calendario de otro usuario
-  const isViewingOtherUser = admin && selectedUserId !== userid;
-
+  const isViewingOtherUser =
+    admin &&
+    !!selectedUserId &&
+    selectedUserId.trim() !== "" &&
+    selectedUserId !== userid;
+  
   // Obtener nombre del usuario visualizado
   const viewedUserName = React.useMemo(() => {
     if (!isViewingOtherUser) return "";
     const record = datasource.find(d => d.userid === selectedUserId);
+
     return record ? record.username : selectedUserId; // Fallback al ID si no encuentra nombre
   }, [datasource, selectedUserId, isViewingOtherUser]);
 
@@ -60,6 +71,7 @@ export const CalendarApp: React.FC<CalendarAppProps> = ({
           <button onClick={() => {
             setSelectedUserId(userid);
             setCurrentView("annual");
+            onCurrentUserChange(userid);
           }}>
             Salir
           </button>
@@ -71,6 +83,7 @@ export const CalendarApp: React.FC<CalendarAppProps> = ({
           year={selectedYear}
           admin={admin}
           isDarkMode={darkMode}
+          onGoBack={onGoBack}
           onSelectMonth={goToMonth}
           onViewSummary={() => setCurrentView("summary")}
           onAdminDashboard={() => setCurrentView("admin")}
@@ -83,12 +96,15 @@ export const CalendarApp: React.FC<CalendarAppProps> = ({
           year={selectedYear}
           datasource={datasource}
           globalabsences={globalabsences}
-          userid={(selectedUserId ? selectedUserId : userid)}
+          userid={userid}
+          calendarUserId={(selectedUserId ? selectedUserId : userid)}
           isDarkMode={darkMode}
           absencePanel={absencePanel}
+          allowPastEdition={allowPastEdition}
           onBack={() => setCurrentView("annual")}
           onSave={onSave}
           onDelete={onDelete}
+          onSelectMonth={goToMonth}
         />
       )}
 
@@ -97,19 +113,22 @@ export const CalendarApp: React.FC<CalendarAppProps> = ({
           onBack={() => setCurrentView("annual")}
           userid={userid}
           datasource={datasource}
-        //isDarkMode={darkMode}
+          //isDarkMode={darkMode}
         />
       )}
 
       {currentView === "admin" && (
         <AdminDashboard
           datasource={datasource}
-          //isDarkMode={darkMode}
+          isDarkMode={darkMode}
           onBack={() => setCurrentView("annual")}
           onAdminMonthlyView={(userid: string) => {
             setSelectedUserId(userid);
             setCurrentView("monthly")
           }}
+          onCurrentUserChangeProp={(value: string) => {
+            onCurrentUserChange(value);
+        }}
         />
       )}
     </div>

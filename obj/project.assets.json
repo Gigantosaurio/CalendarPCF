@@ -14,7 +14,7 @@
           "build/Microsoft.NETFramework.ReferenceAssemblies.net462.targets": {}
         }
       },
-      "Microsoft.PowerApps.MSBuild.Pcf/1.50.1": {
+      "Microsoft.PowerApps.MSBuild.Pcf/1.52.1": {
         "type": "package",
         "build": {
           "build/Microsoft.PowerApps.MSBuild.Pcf.props": {},
@@ -362,10 +362,10 @@
         "microsoft.netframework.referenceassemblies.net462.nuspec"
       ]
     },
-    "Microsoft.PowerApps.MSBuild.Pcf/1.50.1": {
-      "sha512": "gjVP4VjvLHPzN2NaTCeSASAsOfKne+F9scTNADH+xaUSAkanqLG3eYhf68qSsWPWP5ZFtyU4vSj0AqWB/kiimw==",
+    "Microsoft.PowerApps.MSBuild.Pcf/1.52.1": {
+      "sha512": "yO+qE654a8IEtexf9JJxgYqlR4UC8pgJVwk4evQIUFuwErqYwzK856/yYFObXR28jg25i2o954jD81bHy53Mtg==",
       "type": "package",
-      "path": "microsoft.powerapps.msbuild.pcf/1.50.1",
+      "path": "microsoft.powerapps.msbuild.pcf/1.52.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -373,7 +373,7 @@
         "LICENSE.txt",
         "build/Microsoft.PowerApps.MSBuild.Pcf.props",
         "build/Microsoft.PowerApps.MSBuild.Pcf.targets",
-        "microsoft.powerapps.msbuild.pcf.1.50.1.nupkg.sha512",
+        "microsoft.powerapps.msbuild.pcf.1.52.1.nupkg.sha512",
         "microsoft.powerapps.msbuild.pcf.nuspec",
         "tasks/Microsoft.PowerApps.MSBuild.Pcf.tasks",
         "tasks/net472/Microsoft.PowerPlatform.MSBuild.Telemetry.Tasks.dll",

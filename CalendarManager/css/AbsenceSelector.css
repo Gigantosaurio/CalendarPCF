@@ -141,3 +141,45 @@
     display: none;
   }
 }
+
+/* === Estado deshabilitado (sin días seleccionados) === */
+.absence-selector-hint {
+  text-align: center;
+  font-size: clamp(0.8rem, 0.9vw, 0.95rem);
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 8px;
+  padding: 0.5rem 0.8rem;
+  margin-bottom: 0.5rem;
+  animation: hintPulse 2s ease-in-out infinite;
+}
+
+@keyframes hintPulse {
+  0%, 100% { opacity: 0.85; }
+  50% { opacity: 1; }
+}
+
+.dark-mode .absence-selector-hint {
+  color: #fbbf24;
+  background: rgba(251, 191, 36, 0.12);
+  border-color: rgba(251, 191, 36, 0.3);
+}
+
+.absence-grid.disabled {
+  opacity: 0.45;
+  pointer-events: none;
+  filter: grayscale(40%);
+  position: relative;
+}
+
+.absence-grid.disabled .absence-btn {
+  cursor: not-allowed;
+}
+
+.delete-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+  filter: grayscale(40%);
+}

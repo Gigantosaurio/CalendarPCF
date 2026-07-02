@@ -4,12 +4,20 @@ import * as React from "react";
 
 export class CalendarManager implements ComponentFramework.ReactControl<IInputs, IOutputs> {
     private notifyOutputChanged: () => void;
-    private admin: boolean | undefined;
-    private userid: string | undefined;
-    private newrecords: string | undefined;
-    private deletedrecords: string | undefined;
-    private darkMode: boolean | undefined;
-    private absencePanel: boolean | undefined;
+
+    private admin: boolean = false;
+    private userid: string = "";
+    private darkMode: boolean = false;
+    private absencePanel: boolean = false;
+    private showDebug: boolean = false;
+
+    // Caché local de outputs: fuente de verdad para getOutputs()
+    private newrecords: string | null = null;
+    private deletedrecords: string | null = null;
+    private currentUser: string | null = null;
+    private event: string | null = null;
+    private currentDatasource: any[] = [];
+    private allowPastEdition: boolean = false;
 
     constructor() {
         // Empty
@@ -24,48 +32,105 @@ export class CalendarManager implements ComponentFramework.ReactControl<IInputs,
     }
 
     // ──────────────────────────────────────────────
-    //  Lectura genérica de DataSet
+    // Handlers
     // ──────────────────────────────────────────────
 
-    /**
-     * Lee filas del DataSet.
-     * @param probeCols — columnas extra a intentar leer directamente (útil cuando
-     *                    Canvas Apps no expone las columnas del SP list en dataset.columns)
-     */
+    private handleRecordsChange = (newRecords: any, deletedRecords: any): void => {
+        const nextNewRecords = JSON.stringify(newRecords);
+        const nextDeletedRecords = JSON.stringify(deletedRecords);
+
+        const hasChanged =
+            this.newrecords !== nextNewRecords ||
+            this.deletedrecords !== nextDeletedRecords;
+
+        if (!hasChanged) return;
+
+        this.newrecords = nextNewRecords;
+        this.deletedrecords = nextDeletedRecords;
+
+        // Cambiar tipo de evento a "pastRecordsChanged" si hay modificaciones en meses pasados y la propiedad está activa.
+        const ALLOW_PAST_EVENT_TYPE = this.allowPastEdition;
+        let isPastModification = false;
+
+        if (ALLOW_PAST_EVENT_TYPE) {
+            const today = new Date();
+            const currentYear = today.getFullYear();
+            const currentMonth = today.getMonth(); // 0 = enero
+
+            const isPast = (y: number, m: number) => y < currentYear || (y === currentYear && m < currentMonth);
+
+            const anyNewInPast = Array.isArray(newRecords) && newRecords.some((r: any) => isPast(r.year, r.month));
+            const anyDeletedInPast = Array.isArray(deletedRecords) && deletedRecords.some((del: any) => {
+                const matched = this.currentDatasource?.find((r: any) => String(r.guid) === String(del.guid));
+                return matched && isPast(matched.year, matched.month);
+            });
+
+            isPastModification = anyNewInPast || anyDeletedInPast;
+        }
+
+        this.event = isPastModification ? "pastRecordsChanged" : "recordsChanged";
+
+        this.notifyOutputChanged();
+    };
+
+    // Llamada desde Admin Dashboard / CalendarApp cuando se cambia el usuario visualizado.
+    // Power Apps puede leer Self.currentUser de forma reactiva para filtrar festivos regionales.
+    private handleCurrentUserChange = (value: string | null | undefined): void => {
+        const nextValue = value?.trim() ? value.trim() : null;
+
+        if (this.currentUser === nextValue) return;
+
+        this.currentUser = nextValue;
+
+        // Limpiamos los registros pendientes de guardar/eliminar al cambiar de usuario
+        // para que no se procesen por error en el evento OnChange de Power Apps
+        this.newrecords = null;
+        this.deletedrecords = null;
+        this.event = "userChanged";
+
+        this.notifyOutputChanged();
+    };
+
+    // Botón "Volver" de la pantalla principal: dispara Navigate() en Canvas
+    private handleGoBack = (): void => {
+        this.event = "goBack";
+        this.notifyOutputChanged();
+    };
+
+    // ──────────────────────────────────────────────
+    // Lectura genérica de DataSet
+    // ──────────────────────────────────────────────
+
     private readDatasetRows(
         dataset: ComponentFramework.PropertyTypes.DataSet,
         probeCols: string[] = []
     ): any[] {
         if (dataset.loading) return [];
 
-        // Pedir todas las páginas
         if (dataset.paging && dataset.paging.hasNextPage) {
             dataset.paging.loadNextPage();
         }
 
         const rows: any[] = [];
-        // Filtrar columnas sin nombre (property-sets no mapeados devuelven name=null)
         const columns = dataset.columns.filter((col) => col.name != null);
 
         dataset.sortedRecordIds.forEach((id) => {
             const record = dataset.records[id];
             const row: any = { _recordId: id };
 
-            // 1) Leer columnas oficiales del dataset
             columns.forEach((col) => {
                 row[col.name] = record.getValue(col.name);
                 row[`_fmt_${col.name}`] = record.getFormattedValue(col.name);
             });
 
-            // 2) Probar columnas conocidas por nombre (fallback para Canvas Apps)
             for (const colName of probeCols) {
-                if (row[colName] !== undefined) continue; // ya leída
+                if (row[colName] !== undefined) continue;
                 try {
                     const val = record.getValue(colName);
                     row[colName] = val;
                     row[`_fmt_${colName}`] = record.getFormattedValue(colName);
                 } catch (_e) {
-                    // La columna no existe en este record — ignorar
+                    // Ignorar columna inexistente
                 }
             }
 
@@ -86,17 +151,15 @@ export class CalendarManager implements ComponentFramework.ReactControl<IInputs,
     }
 
     // ──────────────────────────────────────────────
-    //  Helpers de conversión
+    // Helpers de conversión
     // ──────────────────────────────────────────────
 
-    /** Parsea un valor numérico que puede venir como string "10.000000000000" o como number */
     private parseNum(value: any): number {
         if (value === null || value === undefined) return 0;
         if (typeof value === "number") return Math.round(value);
         return Math.round(parseFloat(String(value))) || 0;
     }
 
-    /** Devuelve el primer valor no-null/undefined/vacío de entre varias claves de un objeto */
     private pick(obj: any, ...keys: string[]): any {
         for (const k of keys) {
             const v = obj[k];
@@ -106,7 +169,7 @@ export class CalendarManager implements ComponentFramework.ReactControl<IInputs,
     }
 
     // ──────────────────────────────────────────────
-    //  Remapeo SPCalendar → formato interno
+    // Remapeos
     // ──────────────────────────────────────────────
 
     private remapDatasourceRow(raw: any): any {
@@ -125,34 +188,29 @@ export class CalendarManager implements ComponentFramework.ReactControl<IInputs,
         };
     }
 
-    // ──────────────────────────────────────────────
-    //  Remapeo SPFestivo → formato interno
-    // ──────────────────────────────────────────────
-    //  Intenta leer con nombres de SharePoint Y con nombres de property-set (g_*)
-
     private remapGlobalAbsenceRow(raw: any): any {
         let day = 0, month = 0, year = 0;
 
-        // Buscar la fecha: SharePoint="Fecha", property-set="g_fecha"
         const fecha = this.pick(raw, "Fecha", "g_fecha", "_fmt_Fecha", "_fmt_g_fecha");
         if (fecha) {
             const d = new Date(fecha);
             if (!isNaN(d.getTime())) {
                 day = d.getDate();
-                month = d.getMonth(); // 0-indexed
+                month = d.getMonth();
                 year = d.getFullYear();
             }
         }
 
-        // Buscar tipo: SharePoint="Tipo_x0020_Ausencia", property-set="g_tipo"
         const tipoAusencia = String(
-            this.pick(raw,
-                "_fmt_Tipo_x0020_Ausencia", "Tipo_x0020_Ausencia",
-                "_fmt_g_tipo", "g_tipo"
+            this.pick(
+                raw,
+                "_fmt_Tipo_x0020_Ausencia",
+                "Tipo_x0020_Ausencia",
+                "_fmt_g_tipo",
+                "g_tipo"
             ) || ""
         ).trim();
 
-        // Buscar ID: SharePoint="ID", property-set="g_id"
         const guid = String(
             this.parseNum(this.pick(raw, "ID", "g_id")) || raw["_recordId"] || ""
         );
@@ -161,23 +219,25 @@ export class CalendarManager implements ComponentFramework.ReactControl<IInputs,
     }
 
     // ──────────────────────────────────────────────
-    //  updateView
+    // updateView
     // ──────────────────────────────────────────────
 
     public updateView(context: ComponentFramework.Context<IInputs>): React.ReactElement {
-        this.admin = context.parameters.admin?.raw || false;
-        this.userid = context.parameters.userid?.raw || "";
-        this.darkMode = context.parameters.darkMode?.raw || false;
-        this.absencePanel = context.parameters.absencePanel?.raw || false;
+        this.admin = context.parameters.admin?.raw ?? false;
+        this.userid = context.parameters.userid?.raw ?? "";
+        this.darkMode = context.parameters.darkMode?.raw ?? false;
+        this.absencePanel = context.parameters.absencePanel?.raw ?? false;
+        this.showDebug = context.parameters.showDebug?.raw ?? false;
+        this.allowPastEdition = context.parameters.allowPastEdition?.raw ?? false;
 
         // ── DataSet principal (SPCalendar) ──
         const dsMain = context.parameters.datasource;
         const rawMainRows = this.readDatasetRows(dsMain);
         const mainColumnInfo = this.getDatasetColumnInfo(dsMain);
         const mappedDatasource = rawMainRows.map((r) => this.remapDatasourceRow(r));
+        this.currentDatasource = mappedDatasource; // Guardar en caché para comprobaciones de modificaciones en el pasado
 
         // ── DataSet global absences (SPFestivo) ──
-        //    Probar columnas de SharePoint directamente por nombre
         const dsGlobal = context.parameters.globalabsences;
         const rawGlobalRows = this.readDatasetRows(dsGlobal, [
             "ID", "Fecha", "Tipo_x0020_Ausencia", "Oficina"
@@ -185,15 +245,15 @@ export class CalendarManager implements ComponentFramework.ReactControl<IInputs,
         const globalColumnInfo = this.getDatasetColumnInfo(dsGlobal);
         const mappedGlobalAbsences = rawGlobalRows.map((r) => this.remapGlobalAbsenceRow(r));
 
-        // Render del componente React
         return React.createElement(CalendarioAnual, {
-            datasource: mappedDatasource,
-            globalabsences: mappedGlobalAbsences,
+            datasource: Array.isArray(mappedDatasource) ? mappedDatasource : [],
+            globalabsences: Array.isArray(mappedGlobalAbsences) ? mappedGlobalAbsences : [],
             admin: this.admin,
             userid: this.userid,
             darkMode: this.darkMode,
             absencePanel: this.absencePanel,
-            // Debug: datos crudos + metadata de ambos datasets
+            showDebugButton: this.showDebug,
+            allowPastEdition: this.allowPastEdition,
             debugRawData: rawMainRows,
             debugColumnNames: dsMain.columns.map((c) => c.name),
             debugColumnInfo: mainColumnInfo,
@@ -201,18 +261,19 @@ export class CalendarManager implements ComponentFramework.ReactControl<IInputs,
             debugGlobalRaw: rawGlobalRows,
             debugGlobalColumnInfo: globalColumnInfo,
             debugMappedGlobal: mappedGlobalAbsences,
-            onRecordsChange: (newRecords: any, deletedrecords: any) => {
-                this.newrecords = JSON.stringify(newRecords);
-                this.deletedrecords = JSON.stringify(deletedrecords);
-                this.notifyOutputChanged();
-            }
+
+            onRecordsChange: this.handleRecordsChange,
+            onCurrentUserChange: this.handleCurrentUserChange,
+            onGoBack: this.handleGoBack
         });
     }
 
     public getOutputs(): IOutputs {
         return {
-            newrecords: this.newrecords,
-            deletedrecords: this.deletedrecords
+            newrecords: this.newrecords ?? (null as any),
+            deletedrecords: this.deletedrecords ?? (null as any),
+            currentUser: this.currentUser ?? (null as any),
+            event: this.event ?? (null as any)
         };
     }
 

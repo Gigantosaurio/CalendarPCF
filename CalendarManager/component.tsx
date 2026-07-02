@@ -8,6 +8,8 @@ interface CalendarioAnualProps {
   userid: string;
   darkMode: boolean;
   absencePanel: boolean;
+  showDebugButton: boolean;
+  allowPastEdition: boolean;
   debugRawData?: any[];
   debugColumnNames?: string[];
   debugColumnInfo?: any[];
@@ -15,6 +17,8 @@ interface CalendarioAnualProps {
   debugGlobalRaw?: any[];
   debugGlobalColumnInfo?: any[];
   debugMappedGlobal?: any[];
+  onCurrentUserChange: (userId: string) => void;
+  onGoBack: () => void;
   onRecordsChange: (newRecords: any[], deletedRecords: any[]) => void;
 }
 
@@ -89,44 +93,49 @@ export const CalendarioAnual: React.FC<CalendarioAnualProps> = ({
   userid,
   darkMode,
   absencePanel,
+  showDebugButton,
+  allowPastEdition,
   debugRawData,
   debugColumnInfo,
   debugMappedData,
   debugGlobalRaw,
   debugGlobalColumnInfo,
   debugMappedGlobal,
+  onCurrentUserChange,
+  onGoBack,
   onRecordsChange
-}) => {
+  }) => {
   const [showDebug, setShowDebug] = React.useState(false);
   const [debugTab, setDebugTab] = React.useState<"main" | "global">("main");
-
   return (
     <div style={{ position: "relative", width: "100%", height: "100%" }}>
       {/* Botón flotante de debug */}
-      <button
-        onClick={() => setShowDebug(!showDebug)}
-        style={{
-          position: "fixed",
-          bottom: 16,
-          right: 16,
-          zIndex: 99999,
-          width: 44,
-          height: 44,
-          borderRadius: "50%",
-          border: "none",
-          backgroundColor: showDebug ? "#d32f2f" : "#1976d2",
-          color: "#fff",
-          fontSize: 20,
-          cursor: "pointer",
-          boxShadow: "0 2px 8px rgba(0,0,0,0.3)"
-        }}
-        title="Toggle Dataset Debug"
-      >
-        🐛
-      </button>
+      {showDebugButton && (
+        <button
+          onClick={() => setShowDebug(!showDebug)}
+          style={{
+            position: "fixed",
+            bottom: 16,
+            right: 16,
+            zIndex: 99999,
+            width: 44,
+            height: 44,
+            borderRadius: "50%",
+            border: "none",
+            backgroundColor: showDebug ? "#d32f2f" : "#1976d2",
+            color: "#fff",
+            fontSize: 20,
+            cursor: "pointer",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.3)"
+          }}
+          title="Toggle Dataset Debug"
+        >
+          🐛
+        </button>
+      )}
 
       {/* Panel de debug */}
-      {showDebug && (
+      {showDebugButton && showDebug && (
         <div
           style={{
             position: "fixed",
@@ -257,12 +266,17 @@ export const CalendarioAnual: React.FC<CalendarioAnualProps> = ({
         userid={userid}
         darkMode={darkMode}
         absencePanel={absencePanel}
+        allowPastEdition={allowPastEdition}
+        onCurrentUserChange={(value: string) => {
+          onCurrentUserChange(value);
+        }}
+        onGoBack={onGoBack}
         onSave={(updatedEvents: any[]) => {
           onRecordsChange(updatedEvents, []);
         }}
         onDelete={(deletedRecords: any[]) => {
           onRecordsChange([], deletedRecords);
-        }}
+        }} 
       />
     </div>
   );

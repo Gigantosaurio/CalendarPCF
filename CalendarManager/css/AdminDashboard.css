@@ -250,3 +250,117 @@
   }
 }
 
+/* === Dropdown custom de búsqueda de usuarios === */
+.user-filter-dropdown {
+  position: relative;
+  margin-left: 8px;
+  display: inline-block;
+}
+
+.user-filter-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background-color: var(--panel-bg);
+  color: var(--text-color);
+  cursor: pointer;
+  font-size: 0.95rem;
+  min-width: 160px;
+  justify-content: space-between;
+  transition: all 0.2s ease;
+}
+
+.user-filter-trigger:hover {
+  background-color: var(--button-hover);
+}
+
+.user-filter-arrow {
+  font-size: 0.7rem;
+  opacity: 0.6;
+}
+
+.user-filter-panel {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  min-width: 260px;
+  max-width: 320px;
+  background-color: var(--panel-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+  overflow: hidden;
+  animation: dropdownFadeIn 0.15s ease-out;
+}
+
+@keyframes dropdownFadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.user-filter-search {
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--panel-bg);
+  color: var(--text-color);
+  font-size: 0.9rem;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.user-filter-search::placeholder {
+  color: var(--text-color);
+  opacity: 0.5;
+}
+
+.user-filter-list {
+  list-style: none;
+  margin: 0;
+  padding: 4px 0;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.user-filter-option {
+  padding: 8px 14px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--text-color);
+  transition: background-color 0.15s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-filter-option:hover {
+  background-color: rgba(66, 165, 245, 0.12);
+}
+
+.user-filter-option.selected {
+  background-color: rgba(66, 165, 245, 0.2);
+  font-weight: 600;
+}
+
+/* Scrollbar personalizada para la lista */
+.user-filter-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.user-filter-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.user-filter-list::-webkit-scrollbar-thumb {
+  background-color: rgba(128, 128, 128, 0.4);
+  border-radius: 3px;
+}
+
+.user-filter-list::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(128, 128, 128, 0.6);
+}

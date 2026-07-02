@@ -8,9 +8,12 @@ interface CalendarGridProps {
   absences: Record<number, string>;
   globalAbsences?: Record<number, string>;
   selectedDays: number[];
+  calendarUserId: string;
+  userid: string;
   onDayClick: (day: number) => void;
   onSelectRange?: (days: number[]) => void;
   darkMode?: boolean;
+  allowPastEdition?: boolean;
 }
 
 export const AbsenceTextToType: Record<string, AbsenceType> = {
@@ -34,9 +37,12 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
   absences,
   globalAbsences = {},
   selectedDays,
+  userid,
+  calendarUserId,
   onDayClick,
   onSelectRange,
-  darkMode = false
+  darkMode = false,
+  allowPastEdition = false
 }) => {
   const [dragging, setDragging] = React.useState(false);
   const [rangeStart, setRangeStart] = React.useState<number | null>(null);
@@ -60,14 +66,17 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
     return weekday === 0 || weekday === 6;
   };
 
-  // 🔒 Determinar si el mes/año está en el pasado
+  // 🔒 Determinar si el mes/año está en el pasado o si esl usuario del calendario corresponde con el loggeado
   const today = new Date();
   const currentYear = today.getFullYear();
   const currentMonth = today.getMonth(); // 0 = enero
+
+  // Permitir la edición en meses pasados si la propiedad allowPastEdition está habilitada
   const isPastMonth = year < currentYear || (year === currentYear && month < currentMonth);
+  const isEditionDisabled = (isPastMonth && !allowPastEdition) || userid != calendarUserId ;
 
   const handleMouseDown = (day: number, isBlocked: boolean) => {
-    if (isPastMonth || isBlocked) return;
+    if (isEditionDisabled || isBlocked) return;
     setDragging(true);
     setRangeStart(day);
   };
@@ -78,7 +87,7 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
   };
 
   const handleMouseEnter = (day: number, isBlocked: boolean) => {
-    if (isPastMonth || !dragging || rangeStart === null || !onSelectRange || isBlocked) return;
+    if (isEditionDisabled || !dragging || rangeStart === null || !onSelectRange || isBlocked) return;
     const start = Math.min(rangeStart, day);
     const end = Math.max(rangeStart, day);
     const range: number[] = [];
@@ -94,7 +103,7 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
 
   return (
     <div
-      className={`calendar-grid ${darkMode ? "dark-mode" : ""} ${isPastMonth ? "disabled-month" : ""
+      className={`calendar-grid ${darkMode ? "dark-mode" : ""} ${isEditionDisabled ? "disabled-month" : ""
         }`}
       onMouseLeave={handleMouseUp}
     >
@@ -127,24 +136,23 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
           "calendar-day",
           weekend && "weekend",
           isSelected && "selected",
-          isPastMonth && "disabled-day",
+          isEditionDisabled && "disabled-day",
           isGlobal && "global-holiday"
         ]
           .filter(Boolean)
           .join(" ");
-
+        
         return (
           <div
             key={i}
             className={classes}
             style={{
               backgroundColor: weekend ? "var(--weekend-bg)" : absenceColor,
-              cursor: isPastMonth ? "not-allowed" : "pointer",
-              opacity: isPastMonth ? 0.6 : 1
+              cursor: isEditionDisabled ? "not-allowed" : "pointer",
+              opacity: isEditionDisabled ? 0.6 : 1
             }}
             onClick={() => {
-              if (isPastMonth || isBlocked) return;
-              //if (isPastMonth || weekend) return;
+              if (isEditionDisabled || isBlocked) return;
               if (isSelected) {
                 onSelectRange?.(selectedDays.filter((d) => d !== day));
               } else {
@@ -152,9 +160,9 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
               }
               onDayClick(day);
             }}
-            onMouseDown={() => !isPastMonth && !weekend && handleMouseDown(day, isBlocked)}
+            onMouseDown={() => !isEditionDisabled && !weekend && handleMouseDown(day, isBlocked)}
             onMouseUp={handleMouseUp}
-            onMouseEnter={() => !isPastMonth && !weekend && handleMouseEnter(day, isBlocked)}
+            onMouseEnter={() => !isEditionDisabled && !weekend && handleMouseEnter(day, isBlocked)}
           >
             <div className="day-number">{day}</div>
             {displayType && <div className="absence-text">{displayType}</div>}

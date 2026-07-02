@@ -50,6 +50,36 @@
   transition: background var(--transition-fast), color var(--transition-fast);
 }
 
+/* ===== Top Bar (Volver) ===== */
+.annual-top-bar {
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 8px;
+}
+
+.back-nav {
+  background: transparent;
+  border: 1px solid var(--color-border-subtle);
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-md);
+  padding: 6px 14px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.back-nav:hover {
+  color: var(--color-secondary);
+  border-color: var(--color-secondary);
+  background: var(--color-surface-hover);
+}
+
 /* ===== Header ===== */
 .annual-header {
   display: flex;

@@ -2,14 +2,14 @@ export type AbsenceType =
   | ""   // Día Trabajado (DEFAULT)
   | "FD"  // Días de Libre Disposición
   | "F"   // Formación
-  | "US"  // Colaboración con la US
+  //| "US"  // Colaboración con la US
   //| "CM"  // Reunión cliente
   | "CE"  // Compensados NTT DATA Centers
   | "OP"  // Cargado a otro proyecto o staff
   //| "WE"  // Fin Semana
   | "BH"  // Festivo
   | "H"   // Vacaciones Confirmadas
-  | "C"   // Navidad / S. Santa
+  //| "C"   // Navidad / S. Santa
   | "B"   // Baja
   | "MI"  // Visita médico
   //| "P"   // PaP Nocturno
@@ -23,14 +23,14 @@ export const AbsenceDescriptions: Record<AbsenceType, string> = {
   D: "Día Debido",
   FD: "Días de Libre Disposición",
   F: "Formación",
-  US: "Colaboración con la US",
+  //US: "Colaboración con la US",
   //CM: "Reunión cliente",
   CE: "Compensados NTT DATA Centers",
   OP: "Cargado a otro proyecto o staff",
   //WE: "Fin Semana",
   BH: "Festivo",
   H: "Vacaciones",
-  C: "Navidad / S. Santa",
+  //C: "Navidad / S. Santa",
   B: "Baja",
   MI: "Visita médico",
   //P: "PaP Nocturno",
@@ -44,14 +44,14 @@ export const AbsenceColors: Record<AbsenceType, string> = {
   D: "#948080ff",
   FD: "#81c784",
   F: "#64b5f6",
-  US: "#9575cd",
+  //US: "#9575cd",
   //CM: "#ffb74d",
   CE: "#4dd0e1",
   OP: "#90a4ae",
   //WE: "#aed581",
   BH: "#ffcc80",
   H: "#4caf50",
-  C: "#ba68c8",
+  //C: "#ba68c8",
   B: "#e57373",
   MI: "#ff8a65",
   //P: "#7986cb",

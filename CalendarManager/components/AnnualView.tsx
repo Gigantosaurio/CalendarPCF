@@ -1,5 +1,5 @@
 import * as React from "react";
-import { FaCalendarAlt, FaChevronLeft, FaChevronRight, FaChartPie, FaUserShield } from "react-icons/fa";
+import { FaCalendarAlt, FaChevronLeft, FaChevronRight, FaChartPie, FaUserShield, FaArrowLeft } from "react-icons/fa";
 import "../css/AnnualView.css"; // Ruta corregida a la original
 
 // --- PROPS ---
@@ -7,6 +7,7 @@ interface AnnualViewProps {
   year: number;
   admin: boolean;
   isDarkMode: boolean; // Prop para el modo oscuro
+  onGoBack: () => void;
   onSelectMonth: (month: number, year: number) => void;
   onViewSummary: () => void;
   onAdminDashboard: () => void;
@@ -17,6 +18,7 @@ export const AnnualView: React.FC<AnnualViewProps> = ({
   year,
   admin,
   isDarkMode,
+  onGoBack,
   onSelectMonth,
   onViewSummary,
   onAdminDashboard
@@ -43,6 +45,12 @@ export const AnnualView: React.FC<AnnualViewProps> = ({
     <div className={wrapperClass}>
       {/* El div del contenedor ahora usa las variables CSS */}
       <div className="annual-container">
+
+        <div className="annual-top-bar">
+          <button className="back-nav" onClick={onGoBack} aria-label="Volver">
+            <FaArrowLeft /> Volver
+          </button>
+        </div>
         
         <div className="annual-header">
           <button className="year-nav" onClick={handlePrevYear} aria-label="Año anterior">
